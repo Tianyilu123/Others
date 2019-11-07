@@ -1,1 +1,45 @@
 
+class Solution {
+    public int maximumGap(int[] nums) {
+        if(nums == null || nums.length < 2) return 0;
+        int size = nums.length;
+        int max = nums[0], min = nums[0];
+        
+        for(int n : nums) {
+            max = Math.max(max, n);
+            min = Math.min(min, n);
+        }
+        if(max == min) return 0;
+        
+        // Max Gap must > (max-min)/size, so make (max - min)/size as the size of each bucket, max
+        // and min must not local the same bucket
+        
+        int len = (max - min)/size + 1; // +1 means: len should >=1, but (max-min)/size may be 0
+        int numBucket = (max - min)/len + 1; // +1 means: #bucket should >=1, 
+                                             //but(max-min)/len may be 1
+        int[] maxBuckets = new int[numBucket];
+        int[] minBuckets = new int[numBucket];
+        
+        Arrays.fill(maxBuckets, Integer.MIN_VALUE);
+        Arrays.fill(minBuckets, Integer.MAX_VALUE);
+        
+        for(int n : nums) {
+            int i = (n-min)/len;
+            minBuckets[i] = Math.min(minBuckets[i], n);
+            maxBuckets[i] = Math.max(maxBuckets[i], n);
+        }
+        
+        int maxGap = Integer.MIN_VALUE, prev = -1;
+        for(int i=0; i<numBucket; i++) {
+            if(minBuckets[i] == Integer.MAX_VALUE && maxBuckets[i] == Integer.MIN_VALUE)
+                continue;
+            if(prev == -1) {
+                prev = maxBuckets[i];
+            } else {
+                maxGap = Math.max(maxGap, minBuckets[i] - prev);
+                prev = maxBuckets[i];
+            }
+        }
+        return maxGap;
+    }
+}
