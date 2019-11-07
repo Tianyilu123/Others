@@ -1,4 +1,31 @@
+// method 1:
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        if(head ==null) return head;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode cur = head, prev = null, tmp = null;
+        while(cur != null && cur.next != null) {
+            if(cur.val > cur.next.val) {
+                tmp = cur.next;
+                cur.next = tmp.next;
+                prev = dummy;
+                while(prev.next.val <= tmp.val) {
+                    prev = prev.next;
+                }
+                tmp.next = prev.next;
+                prev.next = tmp;
+            }
+            else {
+                cur = cur.next;
+            }
+        }
+        return dummy.next;
+    }
+}
 
+
+// method 2:
 class Solution {
     public ListNode insertionSortList(ListNode head) {
         ListNode tHead = new ListNode(0), p = head;
